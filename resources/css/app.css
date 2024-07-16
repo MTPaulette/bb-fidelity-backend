@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Ubuntu";
+    font-size: "16px";
+    line-height: "24px";
+    cursor: default;
+  }
+  button {
+    font-family: 'roboto';
+  }
+  .shadow-light {
+    box-shadow:
+      20px 0px 20px rgb(223, 223, 223);
+  }
+
+  .shadow-dark {
+    box-shadow:
+    20px 0px 20px rgb(56, 56, 56);
+  }
+
+  .shadow-dropdown-light {
+    box-shadow:
+      0px 3px 5px rgb(79, 79, 79);
+      /* 5px 0px 5px rgb(223, 223, 223); */
+  }
+
+  .shadow-dropdown-dark {
+    box-shadow:
+    0px 3px 5px rgb(0, 0, 0);
+  }
+}
+
+@layer components {
+  .text-primary {
+    @apply text-[#5f6368] dark:text-[#9aa0a6] 
+  }
+  
+  .text-secondary {
+    /* @apply text-[#3c4043] dark:text-[#cac9c9] */
+    /* @apply text-[#3c4043] dark:text-[#d8dadb] */
+    @apply text-[#3c4043] dark:text-[#eceded]
+  }
+
+  .text-danger {
+    @apply text-[#d50100] dark:text-red-500
+  }
+
+  .text-accentuate {
+    @apply text-purple-600 dark:text-purple-500
+    /* @apply text-[#202124] dark:text-[#dadce0] 
+    @apply text-black dark:text-white*/
+  }
+
+  .text-black-white {
+    @apply text-gray-900 dark:text-white
+  }
+  
+  .title {
+    /* @apply my-6 sm:my-8 font-[roboto] font-bold text-2xl md:text-3xl text-gray-800 dark:text-gray-100 */
+    @apply text-xl md:text-2xl font-bold font-[roboto] leading-tight tracking-tight text-black-white
+  }
+
+  .subtitle {
+    @apply text-secondary font-[Roboto] font-semibold
+    /* @apply text-[#3c4043] dark:text-[#dadce0] font-[Roboto] font-semibold */
+  }
+
+  .disabled {
+    @apply disabled:cursor-not-allowed disabled:opacity-25
+  }
+
+  .border-color {
+    @apply border-[#dadce0] dark:border-[#cf62f0]
+  }
+
+  /* use for main */
+  .bg-default {
+    @apply bg-white dark:bg-[#202124] text-primary
+  }
+
+  /* use for sidebar, search in index */
+  .bg-primary {
+    @apply bg-gray-50 dark:bg-[#27282c] text-primary
+  }
+
+  /* use for links-bar */
+  .bg-secondary {
+    @apply bg-purple-50 dark:bg-[#33383c] text-secondary
+  }
+
+  /* use for selected icon bg */
+  .bg-highlight {
+    @apply bg-teal-200 dark:bg-teal-700
+  }
+
+  .bg-accentuate {
+    @apply bg-purple-800 dark:bg-purple-500 text-white
+  }
+
+  /* dropdown */
+  .dropdown {
+    @apply bg-primary rounded-md shadow-dropdown-light dark:shadow-dropdown-dark
+  }
+
+  /* navbar */
+  
+  .input-index-search {
+    @apply block py-3 md:py-4 md:pr-4 pl-8 md:pl-14 rounded-full text-primary bg-primary appearance-none border-0 active:bg-transparent focus:outline-none focus:ring-0
+  }
+  
+  .input-search {
+    @apply block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-mango focus:border-mango dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-mango dark:focus:border-mango
+  }
+  .icon-style {
+    @apply w-4 h-4 md:w-5 md:h-5 text-purple-600 dark:text-purple-500 dark:hover:text-purple-500
+  }
+
+  /* authentification */
+  .label {
+    @apply block mb-2 text-sm font-medium text-black-white whitespace-nowrap
+  }
+
+  .input {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500
+  }
+
+  
+  .input-error {
+    @apply mt-0.5 ml-1 text-xs text-danger text-right
+  }
+
+  .btn-default {
+    @apply w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800
+  }
+
+  .btn-icon {
+    @apply inline-flex items-center justify-center capitalize font-medium focus:ring-4 focus:outline-none disabled whitespace-nowrap
+  }
+
+  .btn-light {
+    @apply inline-flex items-center capitalize font-medium focus:ring-4 focus:outline-none disabled whitespace-nowrap rounded-lg text-white bg-gray-500 hover:bg-gray-800 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center capitalize font-medium focus:ring-4 focus:outline-none disabled whitespace-nowrap rounded-lg text-white bg-red-700 hover:bg-red-800 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800
+  }
+
+  .btn-success {
+    @apply inline-flex items-center capitalize font-medium focus:ring-4 focus:outline-none disabled whitespace-nowrap rounded-lg text-white bg-green-700 hover:bg-green-800 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
+  }
+
+  .btn-warning {
+    @apply inline-flex items-center capitalize font-medium focus:ring-4 focus:outline-none disabled whitespace-nowrap rounded-lg text-white bg-yellow-500 hover:bg-yellow-800 focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800
+  }
+  
+  .btn-extrasmall {
+    @apply px-2.5 py-1.5 text-xs
+  }
+
+  .btn-base {
+    @apply px-5 py-2.5 text-sm 
+  }
+
+  .text-area {
+    @apply block p-2.5 mt-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-300 focus:border-purple-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-700 dark:focus:border-purple-800
+  }
+
+
+
+
+  /** sidebarDashbord style */
+  
+  .active-navbar-link {
+    @apply bg-sheet-200 text-white
+  }
+
+  .sidebar-item-dropdown {
+    @apply flex items-center w-full p-2 text-gray-600 transition duration-75 rounded-lg pl-11 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700
+    /* @apply flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 */
+  }
+
+  /* .btn-icon-secondary {
+    @apply p-2 mr-2 rounded-full cursor-pointer hover:text-[#202124] hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white selection:text-[1a73e8]
+  } 
+  
+  .input-search {
+    @apply block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-mango focus:border-mango dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-mango dark:focus:border-mango
+  }
+*/
+}
