@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class PasswordController extends Controller
 {
@@ -28,20 +28,44 @@ class PasswordController extends Controller
      */
     public function update(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $user = User::find($request->id);
+        // return $user->password;
+        $request->validate([
+            'current_password' => ['required','string','min:8'],
+            'password' => ['required', 'string', 'min:8']
+        ]);
+
+        // $currentPasswordHash= Hash::make($request->current_password);
+        $currentPasswordHash= Hash::check($request->current_password, $user->password);
+        if($currentPasswordHash){
+
+            $user->password = $request->password;
+            $user->update();
+
+            $response = [
+                'message' => "Password Updated Successfully"
+            ];
+            return response($response, 201);
+
+        }else{
+            $response = [
+                'errors' => 'Current Password does not match with Old Password',
+            ];
+            return response($response, 500);
+        }
+    }
+
+
+    public function update1(Request $request)
+    {
+        $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed'],
         ]);
 
-        if($validator->fails()){
-            return response([
-                'errors' => $validator->errors(),
-            ], 403);
-        }
-
         $user = User::find($request->id);
         $user->update([
-            'password' => $validator['password'],
+            'password' => $validated['password'],
         ]);
         
         $response = [

@@ -21,15 +21,15 @@ class UserAccountController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'name' => 'required|max:50',
+            'name' => 'required|string|max:50',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|string|min:6',
         ]);
 
         if($validator->fails()){
             return response([
                 'errors' => $validator->errors(),
-            ], 403);
+            ], 500);
         }
 
         $user = User::create($validator->validated());
