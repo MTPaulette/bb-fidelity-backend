@@ -17,11 +17,11 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]), true)) {
             throw ValidationException::withMessages([
-                'email' => 'Auth failed'
+                'email' => 'Auth failed. Email not found or incorrect password'
             ]);
             return response([
                 'message' => ['These credentials do not match our records.']
-            ], 404);
+            ], 422);
         }
 
         $user = User::where('email', $request->email)->first();

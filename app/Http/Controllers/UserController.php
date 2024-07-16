@@ -66,7 +66,17 @@ class UserController extends Controller
         $user = User::find($request->id);
         if($request->point) {
             if($request->malus) {
-                $user->point = $user->point - $request->point;
+                if($user->point == 0) {
+                    $response = [
+                        'errors' => "you can't remove point to user with zero piont.",
+                    ];
+                    return response($response, 422);
+                }
+                if($user->point < $request->malus) {
+                    $user->point = 0;
+                }else {
+                    $user->point = $user->point - $request->point;
+                }
             }else {
             $user->point = $user->point + $request->point;
             }

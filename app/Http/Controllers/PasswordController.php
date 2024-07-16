@@ -29,13 +29,11 @@ class PasswordController extends Controller
     public function update(Request $request)
     {
         $user = User::find($request->id);
-        // return $user->password;
         $request->validate([
-            'current_password' => ['required','string','min:8'],
-            'password' => ['required', 'string', 'min:8']
+            'current_password' => ['required','string','min:6'],
+            'password' => ['required', 'string', 'min:6']
         ]);
-
-        // $currentPasswordHash= Hash::make($request->current_password);
+        
         $currentPasswordHash= Hash::check($request->current_password, $user->password);
         if($currentPasswordHash){
 
