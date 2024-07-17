@@ -33,7 +33,6 @@ class UserController extends Controller
         $user = User::find($id);
         $response = [
             'user' => $user,
-            'message' => "user's point updated",
         ];
 
         return response($response, 201);
