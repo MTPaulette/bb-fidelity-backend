@@ -34,10 +34,7 @@ class UserController extends Controller
         $response = [
             'user' => $user,
         ];
-
         return response($response, 201);
-
-
     }
 
     /**

@@ -16,9 +16,8 @@ class ServiceController extends Controller
     public function index()
     {
         $response = [
-            'services' => Service::orderByDesc('created_at')->paginate(10),
+            'services' => Service::orderBy('name', 'asc')->paginate(10),
         ];
-
         return response($response, 201);
     }
 
@@ -44,7 +43,6 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        
         $service = new Service();
         $service->name = $request->name;
         $service->description = $request->description;
@@ -61,11 +59,14 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show(Service $service)
+    public function show($id)
     {
-        //
+        $service = Service::find($id);
+        $response = [
+            'service' => $service,
+        ];
+        return response($response, 201);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
