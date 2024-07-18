@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('service_users', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            // $table->unsignedInteger('price');
+            //$table->unsignedInteger('point')->default(0);
+            //$table->string('validity')->nullable();
+            //$table->text('description')->nullable();
+            $table->foreignIdFor(\App\Models\User::class);
             $table->timestamps();
-            $table->foreignIdFor(\App\Models\User::class)
-                    ->onDelete('cascade');
-            $table->foreignIdFor(\App\Models\Service::class)
-                    ->onDelete('cascade');
-            $table->boolean('pay_point')->default(0);
         });
     }
 
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_users');
+        Schema::dropIfExists('services');
     }
 };

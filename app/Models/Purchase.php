@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class Service_user extends Pivot
+class Purchase extends Pivot
 {
     use HasFactory;
     protected $fillable = [
-        'pay_point',
+        'by_cash',
+        'bonus_point',
+        'user_balance',
+        'admin_id'
     ];
 }

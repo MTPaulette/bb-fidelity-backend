@@ -16,7 +16,8 @@ class UserController extends Controller
     public function index()
     {
         $response = [
-            'users' => User::orderByDesc('created_at')->paginate(10),
+            'users' => User::orderBy('name', 'asc')->get(),
+            // 'users' => User::orderByDesc('created_at')->paginate(10),
         ];
 
         return response($response, 201);

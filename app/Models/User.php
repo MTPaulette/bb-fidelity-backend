@@ -27,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'point'
+        'balance'
     ];
 
     /**
@@ -65,9 +65,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     
     public function services(): BelongsToMany {
-        return $this->belongsToMany(service::class, 'service_users')
-                    ->using(service_user::class)
-                    ->withPivot('pay_point');
+        return $this->belongsToMany(Service::class, 'purchases')
+                    ->using(Purchase::class)
+                    ->withPivot('by_cash' , 'bonus_point', 'user_balance', 'admin_id');
     }
 
 }

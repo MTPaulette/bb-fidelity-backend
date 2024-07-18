@@ -35,8 +35,8 @@ Route::put('/password', [PasswordController::class, 'update'])->name('password.u
 
 Route::get('/users', [UserController::class, 'index'])->name('users');
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
-Route::get('/user/{user}', [UserController::class, 'show'])->name('user');
-Route::get('/service/{service}', [ServiceController::class, 'show'])->name('service');
+Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
+Route::get('/service/{id}', [ServiceController::class, 'show'])->name('service');
 Route::put("/updatePoint",[UserController::class, "update"])->name("update.point");
 
 // http://127.0.0.1:8000/api/register?email=mayogue@test.com&name=mayogue&password=123456789&confirm_password=123456789

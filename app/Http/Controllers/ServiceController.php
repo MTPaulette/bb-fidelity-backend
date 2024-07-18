@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
@@ -16,23 +17,9 @@ class ServiceController extends Controller
     public function index()
     {
         $response = [
-            'services' => Service::orderBy('name', 'asc')->paginate(10),
+            'services' => Service::orderBy('name', 'asc')->get(),
         ];
         return response($response, 201);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return Inertia("Dashboard/Service/Add",
-        [
-            'services' => Service::orderBy('name', 'asc')
-                                    ->get()
-        ]);
     }
 
     /**
@@ -43,14 +30,40 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        $service = new Service();
-        $service->name = $request->name;
-        $service->description = $request->description;
-        $service->price = $request->price;
-        $service->user_id = $request->user()->id;
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|unique:services',
+            'price' => 'required',
+            'point' => 'required',
+            'validity' => 'required',
+            'description' => 'required|string',
+        ]);
 
+        if($validator->fails()){
+            return response([
+                'errors' => $validator->errors(),
+            ], 500);
+        }
+
+        $service = Service::where('email', $request->email)->first();
+        $service->user_id = $request->user()->id;
         $service->save();
-        return redirect()->route('service.index')->with('success', 'service successfully created');
+
+        $response = [
+            'service' => $service,
+            'message' => 'Service successfully created.'
+        ];
+
+        return response($response, 201);
+
+        // $service = Service::create($validator->validated());
+        // $service = new Service();
+        // $service->name = $request->name;
+        // $service->description = $request->description;
+        // $service->price = $request->price;
+        // $service->user_id = $request->user()->id;
+
+        // $service->save();
+        // return redirect()->route('service.index')->with('success', 'service successfully created');
     }
 
     /**
@@ -61,6 +74,7 @@ class ServiceController extends Controller
      */
     public function show($id)
     {
+        // $service = Service::find($id)->with('users')->get();
         $service = Service::find($id);
         $response = [
             'service' => $service,

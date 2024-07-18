@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
             $table->unsignedInteger('price');
-            $table->foreignIdFor(\App\Models\User::class);
+            $table->unsignedInteger('point')->default(0);
+            $table->string('validity')->default('1 hour');
+            $table->text('description')->nullable();
+            $table->foreignIdFor(\App\Models\User::class)->default(1);
             $table->timestamps();
         });
     }

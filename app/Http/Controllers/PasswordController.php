@@ -52,26 +52,4 @@ class PasswordController extends Controller
             return response($response, 500);
         }
     }
-
-
-    public function update1(Request $request)
-    {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed'],
-        ]);
-
-        $user = User::find($request->id);
-        $user->update([
-            'password' => $validated['password'],
-        ]);
-        
-        $response = [
-            'message' => "password updated",
-        ];
-
-        return response($response, 201);
-
-        // return redirect('/dashboard')->with('success', 'password was successfully modified!!!');
-    }
 }

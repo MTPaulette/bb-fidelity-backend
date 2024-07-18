@@ -12,21 +12,23 @@ class Service extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'description',
         'price',
+        'point',
+        'validity',
+        'description',
     ];
     
-    public function getBbPointAttribute() {
-        return $this->price/100;
-    }
+    // public function getBbPointAttribute() {
+    //     return $this->price/100;
+    // }
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 
     public function users(): BelongsToMany {
-        return $this->belongsToMany(User::class, 'service_users')
-                    ->using(service_user::class)
-                    ->withPivot('pay_point');
+        return $this->belongsToMany(User::class, 'purchases')
+                    ->using(Purchase::class)
+                    ->withPivot('by_cash' , 'bonus_point', 'user_balance', 'admin_id');
     }
 }

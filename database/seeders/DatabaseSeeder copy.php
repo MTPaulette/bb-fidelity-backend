@@ -33,7 +33,9 @@ class DatabaseSeeder extends Seeder
         
 
         /* service */
-        \App\Models\Service::factory(15)->create();
+        \App\Models\Service::factory(15)->create([
+            'user_id' => 1,
+        ]);
 
         /* service user */
         $u10 = \App\Models\User::find(10);
