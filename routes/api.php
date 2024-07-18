@@ -32,11 +32,14 @@ Route::post("/reset",[PasswordController::class, "store"])->name("reset");
 Route::put('/profile', [UserAccountController::class, 'update'])->name('profile.update');
 Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
 
-
+/* user's route */
 Route::get('/users', [UserController::class, 'index'])->name('users');
-Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
+Route::put("/updateBalance",[UserController::class, "update"])->name("update.point");
+
+/* service's route */
+Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/service/{id}', [ServiceController::class, 'show'])->name('service');
-Route::put("/updatePoint",[UserController::class, "update"])->name("update.point");
+Route::post("/service/store",[ServiceController::class, "store"])->name("service.store");
 
 // http://127.0.0.1:8000/api/register?email=mayogue@test.com&name=mayogue&password=123456789&confirm_password=123456789

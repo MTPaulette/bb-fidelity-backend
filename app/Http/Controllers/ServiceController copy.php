@@ -30,10 +30,11 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+        return 'dfghj';
         $validator = Validator::make($request->all(),[
             'name' => 'required|string|unique:services',
-            'price' => 'required|integer',
-            'point' => 'required|integer',
+            'price' => 'required',
+            'point' => 'required',
             'validity' => 'required',
             'description' => 'required|string',
         ]);
@@ -41,22 +42,29 @@ class ServiceController extends Controller
         if($validator->fails()){
             return response([
                 'errors' => $validator->errors(),
-            ], 422);
+            ], 500);
         }
 
-        $service = Service::create($validator->validated());
-
-        $service = Service::where('name', $request->name)->first();
-        $service->user_id = $request->user_id;
-
+        $service = Service::where('email', $request->email)->first();
+        $service->user_id = $request->user()->id;
         $service->save();
 
         $response = [
-            'service_id' => $service->id,
+            'service' => $service,
             'message' => 'Service successfully created.'
         ];
 
         return response($response, 201);
+
+        // $service = Service::create($validator->validated());
+        // $service = new Service();
+        // $service->name = $request->name;
+        // $service->description = $request->description;
+        // $service->price = $request->price;
+        // $service->user_id = $request->user()->id;
+
+        // $service->save();
+        // return redirect()->route('service.index')->with('success', 'service successfully created');
     }
 
     /**

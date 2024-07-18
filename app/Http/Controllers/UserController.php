@@ -61,27 +61,27 @@ class UserController extends Controller
     {
         //dd($request->malus);
         $user = User::find($request->id);
-        if($request->point) {
+        if($request->balance) {
             if($request->malus) {
-                if($user->point == 0) {
+                if($user->balance == 0) {
                     $response = [
-                        'errors' => "you can't remove point to user with zero piont.",
+                        'errors' => "you can't remove balance to user with zero piont.",
                     ];
                     return response($response, 422);
                 }
-                if($user->point < $request->malus) {
-                    $user->point = 0;
+                if($user->balance < $request->malus) {
+                    $user->balance = 0;
                 }else {
-                    $user->point = $user->point - $request->point;
+                    $user->balance = $user->balance - $request->balance;
                 }
             }else {
-            $user->point = $user->point + $request->point;
+            $user->balance = $user->balance + $request->balance;
             }
         }
         $user->update();
         $response = [
             'user' => $user,
-            'message' => "user's point updated",
+            'message' => "user's balance updated",
         ];
 
         return response($response, 201);
