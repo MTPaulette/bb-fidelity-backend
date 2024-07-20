@@ -39,7 +39,10 @@ Route::put("/updateBalance",[UserController::class, "update"])->name("update.poi
 
 /* service's route */
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
-Route::get('/service/{id}', [ServiceController::class, 'show'])->name('service');
+Route::get('/service/{id}', [ServiceController::class, 'show'])->name('service.show');
 Route::post("/service/store",[ServiceController::class, "store"])->name("service.store");
+Route::put('/service/{id}/update', [ServiceController::class, 'update'])->name('service.update');
 
 // http://127.0.0.1:8000/api/register?email=mayogue@test.com&name=mayogue&password=123456789&confirm_password=123456789
+
+// http://127.0.0.1:8000/api/service/store?name=showroom 9 months&price=25000&point=70t&validity=1 month&description=1 moisau showroom&user_id=12

@@ -74,16 +74,6 @@ class ServiceController extends Controller
         ];
         return response($response, 201);
     }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Service  $service
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Service $service)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -92,19 +82,45 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request)
     {
+        $service = Service::find($request->id);
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|unique:services'
+        ]);
+
+        if($validator->fails()){
+            return response([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
         if($request->name) {
             $service->name = $request->name;
-        }
-        if($request->description) {
-            $service->description = $request->description;
         }
         if($request->price) {
             $service->price = $request->price;
         }
+
+        if($request->point) {
+            $service->point = $request->point;
+        }
+
+        if($request->validity) {
+            $service->validity = $request->validity;
+        }
+
+        if($request->description) {
+            $service->description = $request->description;
+        }
+
         $service->update();
-        return redirect()->back()->with('success', 'service updated!');
+        $response = [
+            'service' => $service,
+            'message' => "Service successfully updated",
+        ];
+
+        return response($response, 201);
     }
 
     public function buy(Request $request, Service $service, User $user)
