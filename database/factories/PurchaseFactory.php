@@ -20,7 +20,7 @@ class PurchaseFactory extends Factory
             'by_cash' => fake()->boolean(),
             'bonus_point' => fake()->numberBetween(0, 50000),
             'user_balance' => fake()->numberBetween(0, 150000),
-            'admin_id' => 1
+            //'admin_id' => 1
         ];
     }
 }

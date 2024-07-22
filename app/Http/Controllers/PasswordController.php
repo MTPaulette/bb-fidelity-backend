@@ -40,7 +40,11 @@ class PasswordController extends Controller
             $user->password = $request->password;
             $user->update();
 
+            $token = $user->createToken('my-app-token')->plainTextToken;
+    
             $response = [
+                'user' => $user,
+                'token' => $token,
                 'message' => "Password Updated Successfully"
             ];
             return response($response, 201);

@@ -22,7 +22,15 @@ return new class extends Migration
             $table->boolean('by_cash')->default(1);
             $table->unsignedInteger('bonus_point')->default(0);
             $table->unsignedInteger('user_balance')->default(0);
-            $table->unsignedInteger('admin_id')->default('1');
+            
+            $table->unsignedBigInteger('admin_id')->nullable();
+
+            $table->foreign('admin_id')->references('id')->on('users'); // ->nullable()->constrained()->cascadeOnDelete();
+
+            //$table->foreignId('admin_id')->nullable()->constrained(
+              //  table: 'users'
+            //);
+
             $table->timestamps();
         });
     }

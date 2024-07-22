@@ -70,8 +70,11 @@ class UserAccountController extends Controller
 
         $user->update();
 
+        $token = $user->createToken('my-app-token')->plainTextToken;
+
         $response = [
             'user' => $user,
+            'token' => $token,
             'message' => 'profile updated. You will see all modifications at the next authentification',
         ];
 
