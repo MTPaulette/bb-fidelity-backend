@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function services(): BelongsToMany {
         return $this->belongsToMany(Service::class, 'purchases')
                     ->using(Purchase::class)
-                    ->withPivot('id', 'by_cash' , 'bonus_point', 'user_balance');
+                    ->withPivot('id', 'by_cash' , 'bonus_point', 'user_balance', 'created_at', 'created_at');
     }
 
     public function purchases(): HasMany {

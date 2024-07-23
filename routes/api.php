@@ -49,7 +49,7 @@ Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases'
 Route::get('/purchase/{id}', [PurchaseController::class, 'show'])->name('purchase.show');
 Route::post("/purchase/store",[PurchaseController::class, "store"])->name("purchase.store");
 
-Route::get('/user/{user_id}/services', [PurchaseController::class, 'allPurchasesOfUser'])->name('user.purchases.show');
+Route::get('/user/{user_id}/services', [PurchaseController::class, 'allServicesOfUser'])->name('user.services.show');
 Route::get('/service/{service_id}/users', [PurchaseController::class, 'allUsersOfService'])->name('service.users.show');
 
 // http://127.0.0.1:8000/api/register?email=mayogue@test.com&name=mayogue&password=123456789&confirm_password=123456789
@@ -57,6 +57,8 @@ Route::get('/service/{service_id}/users', [PurchaseController::class, 'allUsersO
 // http://127.0.0.1:8000/api/service/1/users
 
 // http://127.0.0.1:8000/api/user/10/services
+
+// http://127.0.0.1:8000/api/purchase/2?user_id=3
 
 // http://127.0.0.1:8000/api/purchase/store?user_id=10&service_id=4&admin_id=12&by_cash=true
 

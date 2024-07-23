@@ -29,7 +29,7 @@ class Service extends Model
     public function users(): BelongsToMany {
         return $this->belongsToMany(User::class, 'purchases')
                     ->using(Purchase::class)
-                    ->withPivot('id', 'by_cash' , 'bonus_point', 'user_balance');
+                    ->withPivot('id', 'by_cash' , 'bonus_point', 'user_balance', 'created_at', 'created_at');
                     
                     // ->withPivot('id', 'by_cash' , 'bonus_point', 'user_balance', 'admin_id');
     }

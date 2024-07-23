@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purchase;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class PurchaseController extends Controller
 {
@@ -16,22 +18,13 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $all_purchases = array();
-        $purchases = DB::table('purchases')->select('id', 'user_id')->orderByDesc('created_at')->get();
-        return $purchases;
-        
-        foreach ($purchases as $purchase) {
-            $user = User::find($purchase->user_id);
-
-
-            $purchase = $user->services()->having('pivot_id', $purchase->id)->first();
-            array_push($all_purchases, $purchase );
-        };
-
+        // $purchases = Purchase::orderBy('name', 'asc')->with('services')->with('users')->get();
+        // $purchases = Purchase::orderByDesc('created_at')->with('services')->with('users')->get();
+        $purchases = Service::orderByDesc('created_at')->get();
         $response = [
-            'purchases' => $all_purchases,
+            'purchases' => $purchases
         ];
-        return response($response, 201); 
+        return response($response, 201);
     }
 
     /**
@@ -108,54 +101,73 @@ class PurchaseController extends Controller
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $purchase = DB::table('purchases')->select('user_id')->find($id);
-        $user = User::find($purchase->user_id);
-
-
+        $user = User::find($request->user_id);
         $purchase = $user->services()->having('pivot_id', $id)->first();
 
         $response = [
             'purchase' => $purchase,
-            'user' => $user,
         ];
         return response($response, 201);
     }
 
     // get all purchases of user defined by his id
-    public function allServicesOfUser($user_id)
+    public function allPurchasesOfUser($user_id)
     {
         $user = User::find($user_id);
-        if($user->services()->exists()) {
-            $user_services = $user->services()->orderBy('created_at', 'desc')->get();
-            $response = [
-                'user' => $user,
-                'services' => $user_services,
-            ];
-            return response($response, 201);
-        } else {
-            return response([
-                'errors' => 'This user has not yet made a purchase of services.',
-            ], 422);
+        $purchases = $user->services()->groupBy('created_at')->orderBy('id', 'desc')->first();
+        //return $purchases->pivot->admin_id;
+
+        $purchases->pivot->admin_id = 3;
+        $purchases->pivot->save();
+
+        // $purchases = $user->services()->orderBy('created_at', 'asc')->first();
+        return $purchases;
+
+
+        try {
+            $user = User::find($user_id);
+            $purchases = $user->services()->orderBy('created_at', 'desc')->get();
+            // $purchases = $user->services()->orderByPivot('created_at', 'desc')->get();
+
+            if( count($purchases) ) {
+                $response = [
+                    'purchases' => $purchases,
+                ];
+                return response($response, 201);
+            } else {
+                return response([
+                    'errors' => 'This user has not yet made a purchase of services.',
+                ], 422);
+            }
+
+        } catch(Throwable $th) {
+            return $th;
         }
     }
 
     // get all purchases of user defined by his id
     public function allUsersOfService($service_id)
     {
-        $service = Service::find($service_id);
-        if( $service->users()->exists() ) {
-            $service_users = $service->users()->orderBy('created_at', 'desc')->get();
-            $response = [
-                'service' => $service,
-                'users' => $service_users,
-            ];
-            return response($response, 201);
-        } else {
-            return response([
-                'errors' => 'This service has not been purchased by any user.',
-            ], 422);
+        try {
+            $service = Service::find($service_id);
+            $users = $service->users()->orderBy('created_at', 'desc')->get();
+            // $users = $service->users()->orderByPivot('created_at', 'desc')->get();
+
+            if( count($users) ) {
+                $response = [
+                    'users' => $users,
+                ];
+                return response($response, 201);
+            } else {
+                return response([
+                    'errors' => 'This service has not been purchased by any user.',
+                ], 422);
+            }
+
+        } catch(Throwable $th) {
+            return $th;
         }
     }
 }
