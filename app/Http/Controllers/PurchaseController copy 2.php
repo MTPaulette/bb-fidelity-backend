@@ -6,7 +6,6 @@ use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Expr\Cast\Object_;
 
 class PurchaseController extends Controller
 {
@@ -21,13 +20,12 @@ class PurchaseController extends Controller
         $purchases = DB::table('purchases')->select('id', 'user_id')->orderByDesc('created_at')->get();
         // return $purchases;
         
-        foreach ($purchases as $p) {
-            $user = User::find($p->user_id);
+        foreach ($purchases as $purchase) {
+            $user = User::find($purchase->user_id);
 
-            $purchase = $user->services()->having('pivot_id', $p->id)->first();
 
-            $purchase["user_name"] = $user->name;
-            array_push($all_purchases, (Object) $purchase );
+            $purchase = $user->services()->having('pivot_id', $purchase->id)->first();
+            array_push($all_purchases, $purchase );
         };
 
         $response = [
@@ -131,12 +129,9 @@ class PurchaseController extends Controller
         $user = User::find($user_id);
         if($user->services()->exists()) {
             $user_services = $user->services()->orderBy('created_at', 'desc')->get();
-
-            foreach ($user_services as $s) {
-                $s["user_name"] = $user->name;
-            }
             $response = [
-                'services' => (Object) $user_services,
+                'user' => $user,
+                'services' => $user_services,
             ];
             return response($response, 201);
         } else {
