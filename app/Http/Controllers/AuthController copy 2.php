@@ -10,12 +10,9 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:sanctum');
-    // }
 
     public function store(Request $request) {
+        //dd($request);
         if(!Auth::attempt($request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string'
@@ -27,23 +24,21 @@ class AuthController extends Controller
                 'message' => ['These credentials do not match our records.']
             ], 422);
         }
-        $user = User::where('email', $request->email)->first();
-        // $user = Auth::user();
+        // $user = User::where('email', $request->email)->first();
+        $user = Auth::user();
 
+        $token = $user->createToken('my-app-token')->plainTextToken;
 
-        $user->tokens()->delete();
-        if($user->role_id == 1) {
-            $token = $user->createToken('my-app-token', ['admin'])->plainTextToken;
-        } else {
-            $token = $user->createToken('my-app-token', ['view-profile', 'view-historic'])->plainTextToken;
-        }
-        //$cookie = cookie('jwt', $token, 60*24); // expire in 1 day
+        //cookie
+        $cookie = cookie('jwt', $token, 60*24); // expire in 1 day
+        // return $cookie;
+
         $response = [
             'user' => $user,
             'token' => $token
         ];
 
-        return response($response, 201);//->withCookie($cookie);
+        return response($response, 201)->withCookie($cookie);
     }
 
     public function destroy(Request $request) {
@@ -52,20 +47,17 @@ class AuthController extends Controller
         // foreach ($userTokens as $token) {
         //     $token->revoke;
         // }
-        $request->user()->tokens()->delete();
-        
-        //return $request->cookie;
+        $cookie = Cookie::forget('jwt');
+        //return $cookie;
         return response([
             'message' => 'Logout user',
-            'user' => $request->user()
-        ], 201); //->withCookie($cookie);;
+            'cookie' => $cookie,
+            // 'user' => $request->user()
+        ], 201);
     }
 
     public function user(Request $request) {
-        if(isset($request)) {
-
-            return Auth::user();
-        }
-            return response(['message' => 'unauthorize'], 403);
+        return 'ici';
+        //return Auth::user();
     }
 }

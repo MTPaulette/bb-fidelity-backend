@@ -35,7 +35,15 @@ class UserAccountController extends Controller
         $user = User::create($validator->validated());
 
         $user = User::where('email', $request->email)->first();
-        $token = $user->createToken('my-app-token')->plainTextToken;
+
+        if($request->role_id == 1) {
+            $user->role_id = 1;
+            $user->save();
+
+            $token = $user->createToken('my-app-token', ['admin'])->plainTextToken;
+        } else {
+            $token = $user->createToken('my-app-token', ['view-profile', 'view-historic'])->plainTextToken;
+        }
 
         $response = [
             'user' => $user,

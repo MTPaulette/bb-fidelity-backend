@@ -19,38 +19,53 @@ use App\Http\Controllers\ServiceController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/user', function (Request $request){
-    return 'je suis dans le back  de test-brain';
+
+Route::get('/home', function (Request $request) {
+    // return 'home';
+    return $request->user();
+})->name('home');
+
+/* unauthenticated route */
+Route::post("/login",[AuthController::class, "store"])->name("login");
+Route::post("/register",[UserAccountController::class, "store"])->name("register");
+
+
+/* authenticated route: both user and admin */
+
+// Route::middleware(['auth:sanctum', 'abilities:view-historic,view-profile'])->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete("/logout",[AuthController::class, "destroy"])->name("logout");
+    Route::get('/user/{user_id}/services', [PurchaseController::class, 'allServicesOfUser'])->name('user.services.show');
+
+    Route::post("/reset",[PasswordController::class, "store"])->name("reset");
+    Route::put('/profile', [UserAccountController::class, 'update'])->name('profile.update');
+    Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
+    
 });
 
 
-/* authentification's route */
-Route::post("/login",[AuthController::class, "store"])->name("login");
-Route::delete("/logout",[AuthController::class, "destroy"])->name("logout");
-Route::post("/register",[UserAccountController::class, "store"])->name("register");
+/* only admin route */
+Route::middleware(['auth:sanctum', 'abilities:admin'])->group(function () {
 
-Route::post("/reset",[PasswordController::class, "store"])->name("reset");
-Route::put('/profile', [UserAccountController::class, 'update'])->name('profile.update');
-Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
-
-/* user's route */
-Route::get('/users', [UserController::class, 'index'])->name('users');
-Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
-Route::put("/updateBalance",[UserController::class, "update"])->name("update.point");
-
-/* service's route */
-Route::get('/services', [ServiceController::class, 'index'])->name('services');
-Route::get('/service/{id}', [ServiceController::class, 'show'])->name('service.show');
-Route::post("/service/store",[ServiceController::class, "store"])->name("service.store");
-Route::put('/service/{id}/update', [ServiceController::class, 'update'])->name('service.update');
-
-/* purchase's routes */
-Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
-Route::get('/purchase/{id}', [PurchaseController::class, 'show'])->name('purchase.show');
-Route::post("/purchase/store",[PurchaseController::class, "store"])->name("purchase.store");
-
-Route::get('/user/{user_id}/services', [PurchaseController::class, 'allServicesOfUser'])->name('user.services.show');
-Route::get('/service/{service_id}/users', [PurchaseController::class, 'allUsersOfService'])->name('service.users.show');
+    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/user',[AuthController::class, "user"]);
+    Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
+    Route::put("/updateBalance",[UserController::class, "update"])->name("update.point");
+    
+    /* service's route */
+    Route::get('/services', [ServiceController::class, 'index'])->name('services');
+    Route::get('/service/{id}', [ServiceController::class, 'show'])->name('service.show');
+    Route::post("/service/store",[ServiceController::class, "store"])->name("service.store");
+    Route::put('/service/{id}/update', [ServiceController::class, 'update'])->name('service.update');
+    
+    /* purchase's routes */
+    Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
+    Route::get('/purchase/{id}', [PurchaseController::class, 'show'])->name('purchase.show');
+    Route::post("/purchase/store",[PurchaseController::class, "store"])->name("purchase.store");
+    
+    Route::get('/service/{service_id}/users', [PurchaseController::class, 'allUsersOfService'])->name('service.users.show');
+    
+});
 
 // http://127.0.0.1:8000/api/register?email=mayogue@test.com&name=mayogue&password=123456789&confirm_password=123456789
 
