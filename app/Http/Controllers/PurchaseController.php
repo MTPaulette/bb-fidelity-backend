@@ -18,8 +18,6 @@ class PurchaseController extends Controller
     {
         $all_purchases = array();
         $purchases = DB::table('purchases')->select('id', 'user_id')->orderByDesc('created_at')->get();
-        // return $purchases;
-        
         foreach ($purchases as $p) {
             $user = User::find($p->user_id);
 
@@ -77,14 +75,6 @@ class PurchaseController extends Controller
                 }
             }
 
-            
-            // $purchases = $user->services()->orderBy('id', 'desc')->first();
-            // $purchases->pivot->admin_id = $admin_id;
-            // $purchases->pivot->save();
-
-            // $purchases = $user->services()->orderBy('created_at', 'desc')->get();
-            // return $purchases;
-
             $user->balance = $new_balance;
             $user->update();
 
@@ -97,16 +87,12 @@ class PurchaseController extends Controller
         } catch (\Throwable $th) {
             return $th;
         }
-
-        // foreach($request->weights as $weight) {}
-
-
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Purchase  $purchase
+     * @param $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -124,7 +110,12 @@ class PurchaseController extends Controller
         return response($response, 201);
     }
 
-    // get all purchases of user defined by his id
+    /**
+     * Display all purchases of the specified user.
+     *
+     * @param $user_id
+     * @return \Illuminate\Http\Response
+     */
     public function allServicesOfUser($user_id)
     {
         $user = User::find($user_id);
@@ -145,7 +136,12 @@ class PurchaseController extends Controller
         }
     }
 
-    // get all purchases of user defined by his id
+    /**
+     * Display all user of the specified purchase.
+     *
+     * @param $service_id
+     * @return \Illuminate\Http\Response
+     */
     public function allUsersOfService($service_id)
     {
         $service = Service::find($service_id);

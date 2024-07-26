@@ -45,12 +45,10 @@ class ServiceController extends Controller
         }
 
         $service = Service::create($validator->validated());
-
         $service = Service::where('name', $request->name)->first();
         $service->user_id = $request->user_id;
 
         $service->save();
-
         $response = [
             'service_id' => $service->id,
             'message' => 'Service successfully created.'
@@ -62,12 +60,11 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Service  $service
+     * @param $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        // $service = Service::find($id)->with('users')->get();
         $service = Service::find($id);
         $response = [
             'service' => $service,
@@ -76,10 +73,20 @@ class ServiceController extends Controller
     }
 
     /**
+     * Display the specified id resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function recent()
+    {
+        $recent_service_id = Service::orderByDesc('id')->get('id')->first();
+        return response($recent_service_id, 201);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -122,24 +129,6 @@ class ServiceController extends Controller
 
         return response($response, 201);
     }
-
-    public function buy(Request $request, Service $service, User $user)
-    {
-        dd('nj');
-        if($request->name) {
-            $service->name = $request->name;
-        }
-        if($request->description) {
-            $service->description = $request->description;
-        }
-        if($request->price) {
-            $service->price = $request->price;
-        }
-        $service->update();
-        return redirect()->back()->with('success', 'service updated!');
-    }
-    
-
 
     /**
      * Remove the specified resource from storage.

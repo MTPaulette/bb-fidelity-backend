@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -19,14 +18,13 @@ class UserController extends Controller
             'users' => User::orderBy('name', 'asc')->get(),
             // 'users' => User::orderByDesc('created_at')->paginate(10),
         ];
-
         return response($response, 201);
     }
     
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -39,27 +37,26 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display the specified id resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function recent()
+    {
+        $recent_user_id = User::orderByDesc('id')->get('id')->first();
+        return response($recent_user_id, 201);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        User::create(
-            $request->validate([
-            'name' => 'required|max:50',
-            'email' => 'required|unique',
-            'password' => 'required|min:6',
-        ]));
-        return redirect()->route('dashboard')->with('success', 'user was successfully created!!!');
-        // return redirect('/post)
-    }
-
     
     public function update(Request $request)
     {
-        //dd($request->malus);
         $user = User::find($request->id);
         if($request->balance) {
             if($request->malus) {

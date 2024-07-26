@@ -8,23 +8,16 @@ use Illuminate\Support\Facades\Hash;
 
 class PasswordController extends Controller
 {
-   
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
-    
+
     /**
      * Update the user's password.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
@@ -39,12 +32,8 @@ class PasswordController extends Controller
 
             $user->password = $request->password;
             $user->update();
-
-            $token = $user->createToken('my-app-token')->plainTextToken;
-    
             $response = [
                 'user' => $user,
-                'token' => $token,
                 'message' => "Password Updated Successfully"
             ];
             return response($response, 201);

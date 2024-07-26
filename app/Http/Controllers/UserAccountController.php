@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class UserAccountController extends Controller
 {
@@ -18,7 +16,7 @@ class UserAccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:50',
@@ -40,9 +38,38 @@ class UserAccountController extends Controller
             $user->role_id = 1;
             $user->save();
 
-            $token = $user->createToken('my-app-token', ['admin'])->plainTextToken;
+            $token = $user->createToken('bb-fidelity-syst-token', ['admin'])->plainTextToken;
         } else {
-            $token = $user->createToken('my-app-token', ['view-profile', 'view-historic'])->plainTextToken;
+            $token = $user->createToken('bb-fidelity-syst-token', ['view-profile', 'view-historic'])->plainTextToken;
+        }
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
+
+    public function login(Request $request) {
+        if(!Auth::attempt($request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string'
+        ]), true)) {
+            throw ValidationException::withMessages([
+                'email' => 'Auth failed. Email not found or incorrect password'
+            ]);
+            return response([
+                'message' => ['These credentials do not match our records.']
+            ], 422);
+        }
+        $user = User::where('email', $request->email)->first();
+
+        $user->tokens()->delete();
+        if($user->role_id == 1) {
+            $token = $user->createToken('bb-fidelity-syst-token', ['admin'])->plainTextToken;
+        } else {
+            $token = $user->createToken('bb-fidelity-syst-token', ['view-profile', 'view-historic'])->plainTextToken;
         }
 
         $response = [
@@ -54,18 +81,13 @@ class UserAccountController extends Controller
     }
 
     /**
-     * Update the user's password.
+     * Update the user's informations.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
-        // dd($request->user());
-
-        //$user = Auth::user();
-
-        
         $user = User::find($request->id);
         
         if($request->has('name') && isset($request->name)) {
@@ -77,16 +99,27 @@ class UserAccountController extends Controller
         }
 
         $user->update();
-
-        $token = $user->createToken('my-app-token')->plainTextToken;
-
         $response = [
             'user' => $user,
-            'token' => $token,
-            'message' => 'profile updated. You will see all modifications at the next authentification',
+            'message' => 'profile updated.',
         ];
 
         return response($response, 201);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request) {
+        // return $request->user();
+        $user = User::find($request->id);
+        $user->tokens()->delete();
+        return response([
+            'message' => 'Logout user',
+        ], 201);
     }
     
 }

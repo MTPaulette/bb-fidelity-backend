@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserAccountController;
@@ -20,27 +18,25 @@ use App\Http\Controllers\ServiceController;
 |
 */
 
-Route::get('/home', function (Request $request) {
-    // return 'home';
-    return $request->user();
+Route::get('/home', function () {
+    return 'Unauthenticate';
 })->name('home');
 
 /* unauthenticated route */
-Route::post("/login",[AuthController::class, "store"])->name("login");
-Route::post("/register",[UserAccountController::class, "store"])->name("register");
+Route::post("/login",[UserAccountController::class, "login"])->name("login");
+Route::post("/register",[UserAccountController::class, "register"])->name("register");
 
 
 /* authenticated route: both user and admin */
 
 // Route::middleware(['auth:sanctum', 'abilities:view-historic,view-profile'])->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
-    Route::delete("/logout",[AuthController::class, "destroy"])->name("logout");
+    Route::delete("/logout",[UserAccountController::class, "logout"])->name("logout");
     Route::get('/user/{user_id}/services', [PurchaseController::class, 'allServicesOfUser'])->name('user.services.show');
 
-    Route::post("/reset",[PasswordController::class, "store"])->name("reset");
     Route::put('/profile', [UserAccountController::class, 'update'])->name('profile.update');
     Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
-    
+    Route::post("/reset",[PasswordController::class, "store"])->name("reset");
 });
 
 
@@ -48,13 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', 'abilities:admin'])->group(function () {
 
     Route::get('/users', [UserController::class, 'index'])->name('users');
-    Route::get('/user',[AuthController::class, "user"]);
     Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
+    Route::get('/recent/user', [UserController::class, 'recent'])->name('user.recent');
     Route::put("/updateBalance",[UserController::class, "update"])->name("update.point");
     
     /* service's route */
     Route::get('/services', [ServiceController::class, 'index'])->name('services');
     Route::get('/service/{id}', [ServiceController::class, 'show'])->name('service.show');
+    Route::get('/recent/service', [ServiceController::class, 'recent'])->name('service.recent');
     Route::post("/service/store",[ServiceController::class, "store"])->name("service.store");
     Route::put('/service/{id}/update', [ServiceController::class, 'update'])->name('service.update');
     
