@@ -31,8 +31,8 @@ Route::post("/register",[UserAccountController::class, "register"])->name("regis
 
 // Route::middleware(['auth:sanctum', 'abilities:view-historic,view-profile'])->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
-    Route::delete("/logout",[UserAccountController::class, "logout"])->name("logout");
     Route::get('/user/{user_id}/services', [PurchaseController::class, 'allServicesOfUser'])->name('user.services.show');
+    Route::post("/logout",[UserAccountController::class, "logout"])->name("logout");
 
     Route::put('/profile', [UserAccountController::class, 'update'])->name('profile.update');
     Route::put('/password', [PasswordController::class, 'update'])->name('password.update');

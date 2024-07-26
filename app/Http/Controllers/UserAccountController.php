@@ -114,7 +114,6 @@ class UserAccountController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request) {
-        // return $request->user();
         $user = User::find($request->id);
         $user->tokens()->delete();
         return response([
